@@ -1,5 +1,5 @@
 import socket
-from sys import argv
+import threading
 
 STATES = [
     "UNKNOWN",
@@ -12,6 +12,19 @@ STATES = [
 
 IP = "127.0.0.1"
 PORT = 5000
+
+
+_STATE = STATES[0]
+_LOCK = threading.Lock()
+
+def set_state(state: str):
+    global _STATE
+    with _LOCK:
+        _STATE = state
+
+def get_state() -> str:
+    with _LOCK:
+        return _STATE
 
 def run_socket():
     server = socket.socket(socket.AF_INET)
@@ -26,15 +39,12 @@ def run_socket():
             message = connection.recv(1)
             if not message:
                 break
-            print("El estado el engine es " + STATES[int(message.hex())])
+
+            set_state(STATES[int(message.hex())])
+            print("El estado el engine es " + get_state())
     finally:
         connection.close()
         server.close()
 
-if len(argv) < 3:
-    print("Uso: EV_CP_M [IP_Engine] [Puerto_Engine]")
-    exit(-1)
 
-IP = argv[1]
-PORT = int(argv[2])
-run_socket()
+

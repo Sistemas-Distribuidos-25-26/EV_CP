@@ -1,4 +1,6 @@
 FROM python:3.12
-WORKDIR /
-COPY . /
-CMD ["python3", "serversocket.py"]
+WORKDIR /app
+COPY . /app
+RUN pip install --no-cache-dir -r requirements.txt
+EXPOSE 7000
+CMD ["python3", "app/__init__.py", "127.0.0.1", "5000"]
