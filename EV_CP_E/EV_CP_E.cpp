@@ -5,10 +5,14 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <chrono>
+#include <thread>
 #include "./EV_CP_E.hpp"
 
 int PORT = 0;
 auto STATE = CPState::ACTIVE;
+
+#define SEND_STATE send(skt, &STATE, 1, 0)
 
 int main(int argc, char **argv){
 
@@ -44,7 +48,13 @@ int main(int argc, char **argv){
 	}
 
 
-	send(skt, &STATE, 1, 0);
+	while(true){
+		std::cout << "Mandando estado... \n";
+		SEND_STATE;
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+	}
+
+	
 
 	close(skt);
 	return 0;

@@ -1,7 +1,8 @@
 #pragma once
 
 enum class CPState : uint8_t {
-	ACTIVE,
+	UNKNOWN,
+	ACTIVE = 1,
 	OUT_OF_ORDER,
 	CHARGING,
 	BROKEN,
