@@ -38,6 +38,7 @@ def run_socket():
         while True:
             message = connection.recv(1)
             if not message:
+                set_state(STATES[0])
                 break
 
             set_state(STATES[int(message.hex())])
