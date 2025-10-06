@@ -28,7 +28,8 @@ int main(int argc, char **argv){
 	struct sockaddr_in server;
 	memset(&server, 0, sizeof(server));
 	server.sin_family = AF_INET;
-	server.sin_addr.s_addr = htons(PORT);
+	server.sin_port = htons(PORT);
+	server.sin_addr.s_addr = inet_pton(AF_INET, argv[1], &server.sin_addr);
 
 	if(inet_pton(AF_INET, argv[1], &server.sin_addr) != 1){
 		std::cerr << "Dirección inválida" << std::endl;
