@@ -15,6 +15,16 @@ auto STATE = CPState::ACTIVE;
 #define SEND_STATE send(client, &STATE, 1, 0)
 
 
+void get_ko() {
+	char message;
+	std::cout << "Presione una tecla para mandar un K.O.: ";
+	while (true)
+	{
+		message = std::cin.get();
+		if(message) STATE = CPState::BROKEN;
+	}
+}
+
 void handle_monitor(int client){
 	while(true){
 		char buffer[1] = {0};
@@ -28,7 +38,7 @@ void handle_monitor(int client){
 		}
 		else {
 			buffer[bytes_received] = '\0';
-			std::cout << "Mandando estado... \n";
+			
 			SEND_STATE;
 		}
 
@@ -70,6 +80,8 @@ int main(int argc, char **argv){
 
 	std::cout << "Escuchando en el puerto " << PORT << std::endl;
 	int client;
+
+	std::thread t(get_ko);
 
 	while(true){
 		client = accept(skt, nullptr, nullptr);

@@ -17,6 +17,8 @@ IP_Central = "127.0.0.1"
 PORT_Central = 5000
 CP_ID = "0001"
 
+RECONNECTION_TIME = 2
+
 _STATE = STATES[0]
 _LOCK = threading.Lock()
 
@@ -52,5 +54,5 @@ def run_socket():
                         set_state(STATES[0])
                         print("[EngineSocket]  El estado el engine es " + get_state())
         except Exception as e:
-            print("[EngineSocket] Se ha perdido la señal con el servidor, reintentando en 3 segundos...")
-            time.sleep(3)
+            print(f"[EngineSocket] Se ha perdido la señal con el servidor, reintentando en {RECONNECTION_TIME} segundos...")
+            time.sleep(RECONNECTION_TIME)

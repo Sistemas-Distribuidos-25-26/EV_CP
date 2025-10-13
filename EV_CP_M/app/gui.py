@@ -1,6 +1,6 @@
 from dash import html, dcc, Output, Input
 import dash
-from engine_socket import get_state
+from engine_socket import get_state, set_state, STATES
 
 COLOR_MAP = {
     "UNKNOWN": "#b0a7b8",
