@@ -1,5 +1,5 @@
 from sys import argv
-from serversocket import run_socket
+from engine_socket import run_socket
 import threading
 from gui import run
 
@@ -16,10 +16,5 @@ PORT_Engine = int(argv[2])
 IP_Central = argv[3]
 PORT_Central = int(argv[4])
 CP_ID = "CP001"
-
-print(f"Configuración Monitor:")
-print(f"  - Engine: {IP_Engine}:{PORT_Engine}")
-print(f"  - Central: {IP_Central}:{PORT_Central}")
-print(f"  - CP ID: {CP_ID}")
 
 run()

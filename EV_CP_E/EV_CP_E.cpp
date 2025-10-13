@@ -12,16 +12,37 @@
 int PORT = 0;
 auto STATE = CPState::ACTIVE;
 
-#define SEND_STATE send(skt, &STATE, 1, 0)
+#define SEND_STATE send(client, &STATE, 1, 0)
+
+
+void handle_monitor(int client){
+	while(true){
+		char buffer[1] = {0};
+		int bytes_received = recv(client, buffer, sizeof(buffer), 0);
+		if (bytes_received == -1) {
+			std::cerr << "Error en recv" << std::endl;
+		} 
+		else if(bytes_received == 0){
+			std::cerr << "Error en el mensaje" << std::endl;
+			return;
+		}
+		else {
+			buffer[bytes_received] = '\0';
+			std::cout << "Mandando estado... \n";
+			SEND_STATE;
+		}
+
+	}
+}
 
 int main(int argc, char **argv){
 
-	if(argc < 3){
-		std::cerr << "Uso: EV_CP_E [IP_Monitor] [Puerto_Monitor]" << std::endl;
+	if(argc < 2){
+		std::cerr << "Uso: EV_CP_E [PUERTO]" << std::endl;
 		std::exit(-1);
 	}
 
-	PORT = atoi(argv[2]);
+	PORT = atoi(argv[1]);
 
 	int skt = socket(AF_INET, SOCK_STREAM, 0);
 	if(skt < 0){
@@ -33,28 +54,33 @@ int main(int argc, char **argv){
 	memset(&server, 0, sizeof(server));
 	server.sin_family = AF_INET;
 	server.sin_port = htons(PORT);
-	server.sin_addr.s_addr = inet_pton(AF_INET, argv[1], &server.sin_addr);
+	server.sin_addr.s_addr = INADDR_ANY;
 
-	if(inet_pton(AF_INET, argv[1], &server.sin_addr) != 1){
-		std::cerr << "Dirección inválida" << std::endl;
-		close(skt);
-		exit(-1);
-	}
+    if(bind(skt, (struct sockaddr*)&server, sizeof(server)) == -1){
+        std::cerr << "Error en el bind" << std::endl;
+        close(skt);
+        exit(-1);
+    }
 
-	if(connect(skt, (struct sockaddr*)&server, sizeof(server)) < 0){
-		std::cerr << "Error en la conexión" << std::endl;
-		close(skt);
-		exit(-1);
-	}
+    if(listen(skt, 5) == -1){
+        std::cerr << "Error en el listen" << std::endl;
+        close(skt);
+        exit(-1);
+    }
 
+	std::cout << "Escuchando en el puerto " << PORT << std::endl;
+	int client;
 
 	while(true){
-		std::cout << "Mandando estado... \n";
-		SEND_STATE;
-		std::this_thread::sleep_for(std::chrono::seconds(1));
+		client = accept(skt, nullptr, nullptr);
+		if(client == -1){
+			std::cerr << "Error en el accept" << std::endl;
+			close(skt);
+			exit(-1);
+		}
+		handle_monitor(client);
+		close(client);
 	}
-
-	
 
 	close(skt);
 	return 0;
