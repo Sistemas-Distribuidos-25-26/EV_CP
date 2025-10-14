@@ -17,7 +17,7 @@ auto STATE = CPState::ACTIVE;
 
 void get_ko() {
 	char message;
-	std::cout << "Presione una tecla para mandar un K.O.: ";
+	std::cout << "[Engine] Presione una tecla para mandar un K.O" << std::endl;
 	while (true)
 	{
 		message = std::cin.get();
@@ -33,7 +33,7 @@ void handle_monitor(int client){
 			std::cerr << "Error en recv" << std::endl;
 		} 
 		else if(bytes_received == 0){
-			std::cerr << "Error en el mensaje" << std::endl;
+			std::cerr << "[Engine] El monitor cerró la conexión" << std::endl;
 			return;
 		}
 		else {

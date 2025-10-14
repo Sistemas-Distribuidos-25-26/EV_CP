@@ -1,47 +1,17 @@
 import socket
-import threading
 import time
+from config import get_state, set_state, RECONNECTION_TIME, IP_ENGINE, PORT_ENGINE, STATES
 
-STATES = [
-    "UNKNOWN",
-    "ACTIVE",
-    "OUT_OF_ORDER",
-    "CHARGING",
-    "BROKEN",
-    "DISCONNECTED"
-]
-
-IP_Engine = "127.0.0.1"
-PORT_Engine = 5000
-IP_Central = "127.0.0.1"
-PORT_Central = 5000
-CP_ID = "0001"
-
-RECONNECTION_TIME = 2
-
-_STATE = STATES[0]
-_LOCK = threading.Lock()
-
-def set_state(state: str):
-    global _STATE
-    with _LOCK:
-        _STATE = state
-
-def get_state() -> str:
-    with _LOCK:
-        return _STATE
-
-def run_socket():
-
+def engine_socket():
+    print(f"[EngineSocket] Conectando a {IP_ENGINE}:{PORT_ENGINE}...")
     while True:
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                s.connect((IP_Engine, PORT_Engine))
-                print(f"[EngineSocket] Conectado a {IP_Engine}:{PORT_Engine}")
+                s.connect((IP_ENGINE, PORT_ENGINE))
+                print(f"[EngineSocket] Conectado a {IP_ENGINE}:{PORT_ENGINE}")
 
                 while True:
                     try:
-                        print("[EngineSocket] Mandando request de estado...")
                         s.send(bytes([1]))
                         state = s.recv(1)
                         if not state:
