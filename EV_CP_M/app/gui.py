@@ -1,6 +1,5 @@
 from dash import html, dcc, Output, Input
 import dash
-from engine_socket import get_state, set_state, STATES
 import config
 from flask import Flask
 import logging
@@ -35,13 +34,13 @@ app.layout = html.Div([
     [Input("interval-component", "n_intervals")]
 )
 def update(n):
-    style = {"backgroundColor" : COLOR_MAP.get(get_state(), "white"),
+    style = {"backgroundColor" : COLOR_MAP.get(config.get_state(), "white"),
              "height": "100vh",
              "width": "100vw",
              "margin": 0, "padding" : 0,
              "display": "flex", "flexDirection": "column",
              "justifyContent": "center"}    
-    return [f"Estado: {get_state()}", style, f"Monitorizando {config.CP_ID}"]
+    return [f"Estado: {config.get_state()}", style, f"Monitorizando {config.CP_ID}"]
 
 def run():
     app.run("0.0.0.0", port=7000)
