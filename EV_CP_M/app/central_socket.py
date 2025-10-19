@@ -9,6 +9,14 @@ ENQ = b'\x05'
 ACK = b'\x06'
 NACK = b'\x15'
 
+logged = False
+
+def get_payload():
+    if not logged:
+        return f"A#{config.CP_ID}#{config.get_state()}" # Mandar más info (nombre, coordenadas, precio...)
+    else:
+        return f"S#{config.CP_ID}#{config.get_state()}"
+
 def calculate_lrc(data):
     lrc = 0
     for byte in data:
@@ -16,7 +24,7 @@ def calculate_lrc(data):
     return bytes([lrc])
 
 def central_socket():
-
+    global logged
     while True:
         print(f"[CentralSocket] Conectando a {config.IP_CENTRAL}:{config.PORT_CENTRAL}...")
         try:
@@ -35,7 +43,7 @@ def central_socket():
                         continue
 
                     while True:
-                        payload = f"{config.CP_ID},{config.get_state()}".encode()
+                        payload = get_payload().encode()
                         message = STX + payload + ETX + calculate_lrc(payload)
                         s.send(message)
                         response = s.recv(1)
@@ -43,6 +51,8 @@ def central_socket():
                             print( f"[CentralSocket] La central no ha recibido el estado correctamente")
                             s.send(EOT)
                             break
+                        if response == ACK and not logged:
+                            logged = True
                         time.sleep(1)
         except:
             print(f"[CentralSocket] Se ha perdido la señal con la central, reintentando en {config.RECONNECTION_TIME} segundos...")

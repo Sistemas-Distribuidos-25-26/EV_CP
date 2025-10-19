@@ -12,7 +12,8 @@ STATES = [
 
 RECONNECTION_TIME = 2
 
-_STATE = STATES[0]
+OLD_STATE = STATES[0]
+_STATE = STATES[3]
 _LOCK = threading.Lock()
 
 
@@ -27,6 +28,7 @@ CP_ID = "CP001"
 def set_state(state: str):
     global _STATE
     with _LOCK:
+        OLD_STATE = _STATE
         _STATE = state
 
 def get_state() -> str:

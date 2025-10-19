@@ -8,3 +8,6 @@ enum class CPState : uint8_t {
 	BROKEN,
 	DISCONNECTED
 };
+
+float TOTAL_POWER = 50.0;
+float PRICE = 0.34;
