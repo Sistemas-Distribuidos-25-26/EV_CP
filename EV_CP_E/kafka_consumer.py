@@ -30,8 +30,7 @@ def receive_orders():
             destination = data.get("to")
             if source != config.CP_ID:
                 continue
-            if ordertype == "start":
-                config.STATE = config.STATES["CHARGING"]
-            elif ordertype == "stop":
-                config.STATE = config.STATES["ACTIVE"]
+            if ordertype == "prepare":
+                config.TOTAL_CHARGED = 0
+                config.PAIRED = destination
             time.sleep(1)

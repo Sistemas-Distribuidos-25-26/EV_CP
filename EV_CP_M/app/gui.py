@@ -5,12 +5,12 @@ from flask import Flask
 import logging
 
 COLOR_MAP = {
-    "UNKNOWN": "#b0a7b8",
-    "ACTIVE": "#9de64e",
-    "OUT_OF_ORDER": "#de5d3a",
-    "CHARGING":"#3388de",
-    "BROKEN": "#ec273f",
-    "DISCONNECTED": "#b0a7b8"
+    "DESCONECTADO": "#b0a7b8",
+    "ACTIVO": "#9de64e",
+    "FUERA DE SERVICIO": "#de5d3a",
+    "SUMINISTRANDO":"#3388de",
+    "K.O.": "#ec273f",
+    "AVERIADO": "#ec273f"
 }
 
 server = Flask(__name__)
@@ -24,13 +24,37 @@ app.layout = html.Div([
     html.H1("Monitor"),
     html.H3("Monitorizando CP", id="subtitle"),
     html.Div("Estado: ", id="state-text"),
+    html.Div([
+        html.P("", id="pairing_label"),
+        html.Button("Conectar", id="charge_button", n_clicks=0),
+        html.Button("Parar", id="stop_button", n_clicks=0)
+    ],id="charge-div"),
+    html.Div([
+        html.P("Total suministrado: 0kWh",id="charging_status"),
+        html.P("Suministro restante: 0kWh", id="remaining_status")
+    ], id="charging_info", hidden=False),
     dcc.Interval(id="interval-component", interval=1000, n_intervals=0)
 ], id="main-div")
 
 @app.callback(
+    Output("charging_info", "hidden"),
+    Input("charge_button", "n_clicks")
+)
+def start_charging(n):
+    if config.get_state() == "ACTIVO":
+        config.IS_CHARGING = True
+    return False
+
+
+
+
+@app.callback(
     [Output("state-text", "children"),
             Output("main-div", "style"),
-            Output("subtitle", "children")],
+            Output("subtitle", "children"),
+            Output("pairing_label", "children"),
+            Output("remaining_status", "children"),
+            Output("charging_status", "children")],
     [Input("interval-component", "n_intervals")]
 )
 def update(n):
@@ -39,8 +63,15 @@ def update(n):
              "width": "100vw",
              "margin": 0, "padding" : 0,
              "display": "flex", "flexDirection": "column",
-             "justifyContent": "center"}    
-    return [f"Estado: {config.get_state()}", style, f"Monitorizando {config.CP_ID}"]
+             "justifyContent": "center"}
+    if n % 2 == 0 and config.IS_CHARGING and (config.get_state() != "SUMINISTRANDO" or config.REMAINING_POWER <= 0):
+        config.IS_CHARGING = False
+    return [f"Estado: {config.get_state()}",
+            style,
+            f"Monitorizando {config.CP_ID}",
+            f"Vinculado a {config.PAIRED}" if config.PAIRED else "",
+            f"Suministro restante: {config.REMAINING_POWER:.3f}kWh",
+            f"Total suministrado: {config.TOTAL_CHARGED:.3f}kWh"]
 
 def run():
     app.run("0.0.0.0", port=7000)

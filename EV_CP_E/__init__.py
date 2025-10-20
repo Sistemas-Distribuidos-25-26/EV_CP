@@ -8,24 +8,25 @@ from kafka_consumer import receive_orders
 
 def update_power():
     while True:
-        if config.STATE == config.STATES["CHARGING"]:
+        if config.STATE == config.STATES["SUMINISTRANDO"]:
             config.REMAINING_POWER -= 0.1
+            config.TOTAL_CHARGED += 0.1
             time.sleep(0.1)
             if config.REMAINING_POWER <= 0:
                 config.REMAINING_POWER = 0
-                config.STATE = config.STATES["OUT_OF_ORDER"]
+                config.STATE = config.STATES["FUERA DE SERVICIO"]
 
 
 def get_ko():
     while True:
-        if config.STATE == config.STATES["BROKEN"]:
+        if config.STATE == config.STATES["K.O."]:
             message = input("[Engine] Presione una tecla para recuperar el CP: ")
             if message:
-                config.STATE = config.STATES["ACTIVE"]
+                config.STATE = config.STATES["ACTIVO"]
         else:
             message = input("[Engine] Presione una tecla para mandar un K.O: ")
             if message:
-                config.STATE = config.STATES["BROKEN"]
+                config.STATE = config.STATES["K.O."]
 
 def handle_monitor(connection):
     while True:
@@ -33,7 +34,12 @@ def handle_monitor(connection):
         if not msg:
             print("[Engine] El monitor cerró la conexión")
             break
+        if msg == b'\x01':
+            config.STATE = config.STATES["SUMINISTRANDO"]
+
         connection.send(config.STATE)
+        payload = f"{config.PAIRED}#{config.REMAINING_POWER}#{config.TOTAL_CHARGED}".encode()
+        connection.send(payload)
     connection.close()
 
 if len(argv) < 5:

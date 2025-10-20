@@ -291,3 +291,23 @@ h1, h3, #state-text {
         0 0 20px #b0a7b8,
         0 0 40px #b0a7b8;
 }
+
+p {
+    font-size: 14pt;
+    margin: 20px;
+}
+
+#charge-div {
+    margin: 20px;
+    display: flex;
+}
+
+#charge-div button {
+    padding: 16px 32px;
+    border-radius: 8px;
+    outline: none;
+    border: none;
+    background-color: white;
+    font-size: 16pt;
+    cursor: pointer;
+}

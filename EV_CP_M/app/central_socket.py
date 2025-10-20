@@ -13,9 +13,9 @@ logged = False
 
 def get_payload():
     if not logged:
-        return f"A#{config.CP_ID}#{config.get_state()}" # Mandar más info (nombre, coordenadas, precio...)
+        return f"A#{config.CP_ID}#{config.get_state()}#{config.PRICE}" # Mandar más info (nombre, coordenadas)
     else:
-        return f"S#{config.CP_ID}#{config.get_state()}"
+        return f"S#{config.CP_ID}#{config.get_state()}#{config.PAIRED}#{config.TOTAL_CHARGED:.3f}"
 
 def calculate_lrc(data):
     lrc = 0
