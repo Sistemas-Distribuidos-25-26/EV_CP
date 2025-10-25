@@ -1,3 +1,5 @@
+import os
+
 from dash import html, dcc, Output, Input
 import dash
 import config
@@ -45,7 +47,13 @@ def start_charging(n):
         config.IS_CHARGING = True
     return False
 
-
+@app.callback(
+    Output("main-div","hidden"),
+    Input("stop_button", "n_clicks")
+)
+def stop_charging(n):
+    config.IS_CHARGING = False
+    return False
 
 
 @app.callback(
@@ -74,4 +82,4 @@ def update(n):
             f"Total suministrado: {config.TOTAL_CHARGED:.3f}kWh"]
 
 def run():
-    app.run("0.0.0.0", port=7000)
+    app.run("0.0.0.0", port=int(os.getenv("PORT", 7000)))

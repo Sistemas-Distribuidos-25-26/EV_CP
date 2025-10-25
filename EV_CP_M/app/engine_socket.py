@@ -23,9 +23,6 @@ def engine_socket():
                         else:
                             config.set_state(config.STATES[int(state.hex())])
                         config.PAIRED = paired
-                        print("[EngineSocket] El estado el engine es " + config.get_state())
-                        if paired:
-                            print(f"[EngineSocket] Emparejado a: {paired}")
 
                         status = data[1]
                         config.REMAINING_POWER = float(status)

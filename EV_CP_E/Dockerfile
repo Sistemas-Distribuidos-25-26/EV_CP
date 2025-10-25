@@ -4,4 +4,4 @@ COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
 ENTRYPOINT ["python3", "app/__init__.py"]
-CMD ["127.0.0.1", "5000", "127.0.0.1", "6000", "CP000"]
+CMD ["5000", "127.0.0.1", "6000", "CP000"]
