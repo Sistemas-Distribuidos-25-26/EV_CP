@@ -1,0 +1,314 @@
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+* {
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Estados con gradientes espectaculares */
+.UNKNOWN {
+    background: linear-gradient(135deg, #b0a7b8 0%, #8a7f9b 100%) !important;
+}
+
+.ACTIVE {
+    background: linear-gradient(135deg, #9de64e 0%, #7bc043 100%) !important;
+    animation: pulse-green 2s infinite;
+}
+
+.OUT_OF_ORDER {
+    background: linear-gradient(135deg, #de5d3a 0%, #c44527 100%) !important;
+    animation: pulse-orange 2s infinite;
+}
+
+.CHARGING {
+    background: linear-gradient(135deg, #3388de 0%, #2b6cb0 100%) !important;
+    animation: pulse-blue 1.5s infinite;
+}
+
+.BROKEN {
+    background: linear-gradient(135deg, #ec273f 0%, #c53030 100%) !important;
+    animation: shake 0.5s infinite;
+}
+
+.DISCONNECTED {
+    background: linear-gradient(135deg, #b0a7b8 0%, #8a7f9b 100%) !important;
+    animation: fade 3s infinite;
+}
+
+/* Contenedor principal mejorado */
+#main-div {
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efecto de partículas de fondo */
+#main-div::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255,255,255,0.05) 0%, transparent 50%);
+    animation: float 20s infinite linear;
+    pointer-events: none;
+}
+
+/* Título principal */
+h1 {
+    font-size: 4.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow:
+        0 0 30px rgba(255,255,255,0.5),
+        0 0 60px rgba(255,255,255,0.3),
+        0 0 90px rgba(255,255,255,0.1);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: linear-gradient(45deg, #ffffff, #f0f0f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+    z-index: 2;
+}
+
+/* Subtítulo */
+h3 {
+    font-size: 1.8rem;
+    font-weight: 300;
+    margin-bottom: 3rem;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    letter-spacing: 2px;
+    opacity: 0.9;
+    position: relative;
+    z-index: 2;
+}
+
+/* Texto de estado */
+#state-text {
+    font-size: 2.5rem;
+    font-weight: 600;
+    text-shadow:
+        0 0 20px rgba(255,255,255,0.7),
+        0 0 40px rgba(255,255,255,0.4);
+    padding: 1.5rem 3rem;
+    border-radius: 50px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow:
+        0 8px 32px rgba(0,0,0,0.1),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+    position: relative;
+    z-index: 2;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Indicador de estado circular */
+#state-text::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -10px;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 20px currentColor;
+    animation: glow 2s infinite;
+}
+
+/* Animaciones */
+@keyframes pulse-green {
+    0%, 100% {
+        box-shadow: 0 0 50px rgba(157, 230, 78, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 80px rgba(157, 230, 78, 0.8);
+    }
+}
+
+@keyframes pulse-blue {
+    0%, 100% {
+        box-shadow: 0 0 50px rgba(51, 136, 222, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 80px rgba(51, 136, 222, 0.8);
+    }
+}
+
+@keyframes pulse-orange {
+    0%, 100% {
+        box-shadow: 0 0 50px rgba(222, 93, 58, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 80px rgba(222, 93, 58, 0.8);
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+@keyframes fade {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+    }
+    50% {
+        box-shadow: 0 0 30px currentColor, 0 0 60px currentColor;
+    }
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(100px, 100px) rotate(360deg); }
+}
+
+/* Efectos de respaldo para navegadores antiguos */
+@supports not (backdrop-filter: blur(10px)) {
+    #state-text {
+        background: rgba(255,255,255,0.15);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 3rem;
+    }
+
+    h3 {
+        font-size: 1.4rem;
+    }
+
+    #state-text {
+        font-size: 1.8rem;
+        padding: 1rem 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2.2rem;
+        letter-spacing: 2px;
+    }
+
+    h3 {
+        font-size: 1.1rem;
+    }
+
+    #state-text {
+        font-size: 1.4rem;
+        padding: 0.8rem 1.5rem;
+    }
+}
+
+/* Efecto de brillo al cargar */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h1, h3, #state-text {
+    animation: fadeIn 1.5s ease-out;
+}
+
+/* Efecto de neón para el texto de estado */
+.ACTIVE #state-text {
+    color: #9de64e;
+    text-shadow:
+        0 0 10px #9de64e,
+        0 0 20px #9de64e,
+        0 0 40px #9de64e;
+}
+
+.CHARGING #state-text {
+    color: #3388de;
+    text-shadow:
+        0 0 10px #3388de,
+        0 0 20px #3388de,
+        0 0 40px #3388de;
+}
+
+.BROKEN #state-text {
+    color: #ec273f;
+    text-shadow:
+        0 0 10px #ec273f,
+        0 0 20px #ec273f,
+        0 0 40px #ec273f;
+}
+
+.OUT_OF_ORDER #state-text {
+    color: #de5d3a;
+    text-shadow:
+        0 0 10px #de5d3a,
+        0 0 20px #de5d3a,
+        0 0 40px #de5d3a;
+}
+
+.UNKNOWN #state-text,
+.DISCONNECTED #state-text {
+    color: #b0a7b8;
+    text-shadow:
+        0 0 10px #b0a7b8,
+        0 0 20px #b0a7b8,
+        0 0 40px #b0a7b8;
+}
+
+p {
+    font-size: 14pt;
+    margin: 20px;
+}
+
+#charge-div {
+    margin: 20px;
+    display: flex;
+}
+
+#charge-div button {
+    padding: 16px 32px;
+    border-radius: 8px;
+    outline: none;
+    border: none;
+    background-color: white;
+    font-size: 16pt;
+    cursor: pointer;
+    margin: 5px;
+}
